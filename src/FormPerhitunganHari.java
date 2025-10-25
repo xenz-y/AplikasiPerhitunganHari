@@ -26,11 +26,12 @@ public class FormPerhitunganHari extends javax.swing.JFrame {
     public FormPerhitunganHari() {
         initComponents();
         initCustomComponents();
+        initSpinnerListener();
 }
 
 private void initCustomComponents() {
     // Set locale Indonesia
-    Locale localeID = new Locale("id", "ID");
+        Locale localeID = new Locale("id", "ID");
     
     // Konfigurasi ComboBox Bulan
     String[] namaBulan = {
@@ -53,6 +54,8 @@ private void initCustomComponents() {
     jCalendar1.setLocale(localeID);
     jCalendarAwal.setLocale(localeID);
     jCalendarAkhir.setLocale(localeID);
+    
+
     
     // Sinkronisasi JCalendar dengan ComboBox dan Spinner
     sinkronisasiKalender();
@@ -158,6 +161,11 @@ private void sinkronisasiKalender() {
         pnlSelisih.setBorder(javax.swing.BorderFactory.createTitledBorder("Hitung Selisih Hari"));
 
         btnHitungSelisih.setText("HITUNG SELISIH");
+        btnHitungSelisih.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHitungSelisihActionPerformed(evt);
+            }
+        });
 
         lblHasilSelisih.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblHasilSelisih.setText("Hasil Selisih: -");
@@ -300,6 +308,75 @@ private void sinkronisasiKalender() {
     }
     }//GEN-LAST:event_btnHitungActionPerformed
 
+    private void btnHitungSelisihActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitungSelisihActionPerformed
+         try {
+        // Ambil tanggal dari kedua kalender
+        Calendar calAwal = jCalendarAwal.getCalendar();
+        Calendar calAkhir = jCalendarAkhir.getCalendar();
+        
+        // Konversi ke LocalDate
+        LocalDate tanggalAwal = LocalDate.of(
+            calAwal.get(Calendar.YEAR),
+            calAwal.get(Calendar.MONTH) + 1,
+            calAwal.get(Calendar.DAY_OF_MONTH)
+        );
+        
+        LocalDate tanggalAkhir = LocalDate.of(
+            calAkhir.get(Calendar.YEAR),
+            calAkhir.get(Calendar.MONTH) + 1,
+            calAkhir.get(Calendar.DAY_OF_MONTH)
+        );
+        
+        // Hitung selisih hari
+        long selisihHari = ChronoUnit.DAYS.between(tanggalAwal, tanggalAkhir);
+        
+        // Format hasil
+        Locale localeID = new Locale("id", "ID");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", localeID);
+        
+        String hasil = String.format(
+            "<html><b>Selisih Hari: %d hari</b><br>" +
+            "Dari: %s<br>" +
+            "Sampai: %s</html>",
+            Math.abs(selisihHari),
+            tanggalAwal.format(formatter),
+            tanggalAkhir.format(formatter)
+        );
+        
+        lblHasilSelisih.setText(hasil);
+        
+        // Tampilkan peringatan jika tanggal awal > tanggal akhir
+        if (selisihHari < 0) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Tanggal awal lebih besar dari tanggal akhir!",
+                "Peringatan",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
+        
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            "Terjadi kesalahan: " + e.getMessage(),
+            "Error",
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnHitungSelisihActionPerformed
+
+    private void initSpinnerListener() {
+    spnTahun.addChangeListener(e -> {
+        // Update kalender saat spinner berubah
+        int tahun = (Integer) spnTahun.getValue();
+        int bulan = cmbBulan.getSelectedIndex();
+        
+        Calendar cal = jCalendar1.getCalendar();
+        cal.set(Calendar.YEAR, tahun);
+        cal.set(Calendar.MONTH, bulan);
+        jCalendar1.setCalendar(cal);
+        
+        // Auto-hitung jika diinginkan
+        // btnHitungActionPerformed(null);
+    });
+}
+    
     /**
      * @param args the command line arguments
      */

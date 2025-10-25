@@ -286,6 +286,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="HITUNG SELISIH"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHitungSelisihActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lblHasilSelisih">
               <Properties>
