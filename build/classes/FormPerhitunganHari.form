@@ -28,7 +28,10 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="pnlUtama" min="-2" pref="557" max="-2" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="pnlUtama" pref="563" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -95,7 +98,7 @@
                   <Component id="btnHitung" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="pnlPerhitungan" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="176" max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <Component id="pnlSelisih" min="-2" max="-2" attributes="0"/>
@@ -186,7 +189,7 @@
                       <Component id="lblHasilTerakhir" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="lblHasilKabisat" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="12" max="32767" attributes="0"/>
+                      <EmptySpace pref="16" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -272,7 +275,7 @@
                       <Component id="btnHitungSelisih" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="lblHasilSelisih" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="15" max="32767" attributes="0"/>
+                      <EmptySpace pref="24" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

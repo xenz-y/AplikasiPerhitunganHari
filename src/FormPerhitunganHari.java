@@ -155,7 +155,7 @@ private void sinkronisasiKalender() {
                 .addComponent(lblHasilTerakhir)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblHasilKabisat)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pnlSelisih.setBorder(javax.swing.BorderFactory.createTitledBorder("Hitung Selisih Hari"));
@@ -201,7 +201,7 @@ private void sinkronisasiKalender() {
                 .addComponent(btnHitungSelisih)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblHasilSelisih)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnlUtamaLayout = new javax.swing.GroupLayout(pnlUtama);
@@ -246,7 +246,7 @@ private void sinkronisasiKalender() {
                 .addComponent(btnHitung)
                 .addGap(18, 18, 18)
                 .addComponent(pnlPerhitungan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(180, 180, 180))
+                .addGap(176, 176, 176))
             .addGroup(pnlUtamaLayout.createSequentialGroup()
                 .addComponent(pnlSelisih, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -260,7 +260,9 @@ private void sinkronisasiKalender() {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlUtama, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlUtama, javax.swing.GroupLayout.PREFERRED_SIZE, 563, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
