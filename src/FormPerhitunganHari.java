@@ -7,6 +7,17 @@
  *
  * @author USER
  */
+package AplikasiPerhitunganHari;
+import com.toedter.calendar.JCalendar;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Locale;
+import javax.swing.SpinnerNumberModel;
+
 public class FormPerhitunganHari extends javax.swing.JFrame {
 
     /**
@@ -14,6 +25,46 @@ public class FormPerhitunganHari extends javax.swing.JFrame {
      */
     public FormPerhitunganHari() {
         initComponents();
+        initCustomComponents();
+}
+
+private void initCustomComponents() {
+    // Set locale Indonesia
+    Locale localeID = new Locale("id", "ID");
+    
+    // Konfigurasi ComboBox Bulan
+    String[] namaBulan = {
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    };
+    cmbBulan.setModel(new javax.swing.DefaultComboBoxModel<>(namaBulan));
+    
+    // Konfigurasi JSpinner untuk tahun
+    int tahunSekarang = Calendar.getInstance().get(Calendar.YEAR);
+    SpinnerNumberModel modelTahun = new SpinnerNumberModel(
+        tahunSekarang,  // nilai awal
+        1900,           // nilai minimum
+        2100,           // nilai maksimum
+        1               // step
+    );
+    spnTahun.setModel(modelTahun);
+    
+    // Set locale untuk JCalendar
+    jCalendar1.setLocale(localeID);
+    jCalendarAwal.setLocale(localeID);
+    jCalendarAkhir.setLocale(localeID);
+    
+    // Sinkronisasi JCalendar dengan ComboBox dan Spinner
+    sinkronisasiKalender();
+}
+
+private void sinkronisasiKalender() {
+    // Saat kalender berubah, update combo box dan spinner
+    jCalendar1.addPropertyChangeListener("calendar", evt -> {
+        Calendar cal = jCalendar1.getCalendar();
+        cmbBulan.setSelectedIndex(cal.get(Calendar.MONTH));
+        spnTahun.setValue(cal.get(Calendar.YEAR));
+    });
     }
 
     /**
@@ -38,8 +89,8 @@ public class FormPerhitunganHari extends javax.swing.JFrame {
         lblHasilTerakhir = new javax.swing.JLabel();
         lblHasilKabisat = new javax.swing.JLabel();
         pnlSelisih = new javax.swing.JPanel();
-        jCalendar2 = new com.toedter.calendar.JCalendar();
-        jCalendar3 = new com.toedter.calendar.JCalendar();
+        jCalendarAwal = new com.toedter.calendar.JCalendar();
+        jCalendarAkhir = new com.toedter.calendar.JCalendar();
         btnHitungSelisih = new javax.swing.JButton();
         lblHasilSelisih = new javax.swing.JLabel();
 
@@ -57,6 +108,11 @@ public class FormPerhitunganHari extends javax.swing.JFrame {
 
         btnHitung.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnHitung.setText("HITUNG");
+        btnHitung.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHitungActionPerformed(evt);
+            }
+        });
 
         pnlPerhitungan.setBorder(javax.swing.BorderFactory.createTitledBorder("Hasil Perhitungan"));
 
@@ -113,10 +169,10 @@ public class FormPerhitunganHari extends javax.swing.JFrame {
             .addGroup(pnlSelisihLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSelisihLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCalendar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jCalendarAwal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlSelisihLayout.createSequentialGroup()
                         .addGroup(pnlSelisihLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCalendar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jCalendarAkhir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(pnlSelisihLayout.createSequentialGroup()
                                 .addComponent(btnHitungSelisih)
                                 .addGap(0, 0, Short.MAX_VALUE)))
@@ -130,9 +186,9 @@ public class FormPerhitunganHari extends javax.swing.JFrame {
             pnlSelisihLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelisihLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jCalendar2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jCalendarAwal, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCalendar3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jCalendarAkhir, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnHitungSelisih)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -202,6 +258,48 @@ public class FormPerhitunganHari extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnHitungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitungActionPerformed
+        try {
+        // Ambil input dari user
+        int bulan = cmbBulan.getSelectedIndex() + 1; // +1 karena index mulai 0
+        int tahun = (Integer) spnTahun.getValue();
+        
+        // Hitung menggunakan YearMonth
+        YearMonth yearMonth = YearMonth.of(tahun, bulan);
+        int jumlahHari = yearMonth.lengthOfMonth();
+        
+        // Dapatkan hari pertama dan terakhir
+        LocalDate hariPertama = yearMonth.atDay(1);
+        LocalDate hariTerakhir = yearMonth.atEndOfMonth();
+        
+        // Format tanggal
+        Locale localeID = new Locale("id", "ID");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", localeID);
+        
+        // Nama hari dalam bahasa Indonesia
+        String namaHariPertama = hariPertama.getDayOfWeek()
+            .getDisplayName(TextStyle.FULL, localeID);
+        String namaHariTerakhir = hariTerakhir.getDayOfWeek()
+            .getDisplayName(TextStyle.FULL, localeID);
+        
+        // Cek tahun kabisat
+        boolean kabisat = yearMonth.isLeapYear();
+        String statusKabisat = kabisat ? "Tahun Kabisat" : "Bukan Tahun Kabisat";
+        
+        // Tampilkan hasil
+        lblHasilJumlah.setText("Jumlah Hari: " + jumlahHari + " hari");
+        lblHasilPertama.setText("Hari Pertama: " + hariPertama.format(formatter));
+        lblHasilTerakhir.setText("Hari Terakhir: " + hariTerakhir.format(formatter));
+        lblHasilKabisat.setText("Status: " + statusKabisat);
+        
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Terjadi kesalahan: " + e.getMessage(),
+            "Error",
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnHitungActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -242,8 +340,8 @@ public class FormPerhitunganHari extends javax.swing.JFrame {
     private javax.swing.JButton btnHitungSelisih;
     private javax.swing.JComboBox<String> cmbBulan;
     private com.toedter.calendar.JCalendar jCalendar1;
-    private com.toedter.calendar.JCalendar jCalendar2;
-    private com.toedter.calendar.JCalendar jCalendar3;
+    private com.toedter.calendar.JCalendar jCalendarAkhir;
+    private com.toedter.calendar.JCalendar jCalendarAwal;
     private javax.swing.JLabel lblBulan;
     private javax.swing.JLabel lblHasilJumlah;
     private javax.swing.JLabel lblHasilKabisat;
